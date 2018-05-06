@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'underscore';
-import Board from '../../components/Board';
-// import WrapperButton from '../../components/WrapperButton';
-import GameoverBlock from '../../components/GameoverBlock';
+
+import WrapperButton from '../../components/WrapperButton';
+import Speaker from '../../components/Speaker';
+import styles from './controlPanel.scss';
+import resetSvg from '../../assets/svg/reset.svg';
+import undoSvg from '../../assets/svg/undo.svg';
 
 const keyUp = 38;
 const keyRight = 39;
@@ -15,25 +18,22 @@ const keyA = 65;
 const keyD = 68;
 const keyN = 78;
 
-// Web端的展示组件
-export default class WebApp extends React.Component{
-    static propTypes={
-        matrix:PropTypes.arrayOf(PropTypes.array).isRequired,
+export default class controlPanel extends Component{
+    static propTypes = {
         onMoveUp: PropTypes.func.isRequired,
         onMoveDown: PropTypes.func.isRequired,
         onMoveLeft: PropTypes.func.isRequired,
         onMoveRight: PropTypes.func.isRequired,
         onPlaceRandom: PropTypes.func.isRequired,
-        gameover: PropTypes.bool,
-        onReset :PropTypes.func.isRequired
-    }
-
+        onReset: PropTypes.func.isRequired
+      };
+    
     constructor(...args){
         super(...args);
-        this.keyUpHandler=this.handleKeyUp;
-        // this.keyUpHandler = debounce(this.handleKeyUp,1000);
-        // console.log(this.keyUpHandler);
+
+        this.keyUpHandler = debounce(this.handleKeyUp,1000);
     }
+
     componentWillMount(){
         // 第三个参数useCapture，true在捕获阶段触发，false在冒泡阶段触发（默认）
         // 在keyup的时候触发
@@ -63,33 +63,15 @@ export default class WebApp extends React.Component{
               break;
         }
     }
-    handleKeyUp = e => {
-        switch (e.keyCode) {
-          case keyW:
-          case keyUp:
-            this.handleMoveUp();
-            break;
-          case keyS:
-          case keyDown:
-            this.handleMoveDown();
-            break;
-          case keyA:
-          case keyLeft:
-            this.handleMoveLeft();
-            break;
-          case keyD:
-          case keyRight:
-            this.handleMoveRight();
-            break;
-          case keyN:
-            this.props.onReset();
-            break;
-          default:
-            break;
-        }
-    };
+    // keyUpHandler= e=>{
+    //     switch(e.keyCode){
+    //         case keyW:
+    //         case keyUp:
+                
+    //     }
+    // }
 
-    generalMove = func =>{
+    gerneralMove = func =>{
         func();
         setTimeout(()=>{
             this.props.onPlaceRandom();
@@ -112,21 +94,5 @@ export default class WebApp extends React.Component{
         this.generalMove(this.props.onMoveRight);
     };
 
-    render(){
-        const {matrix,gameover,onReset}=this.props;
-
-        return (
-            <div className='app'>
-                <div className='box'>
-                    <div className='board'>
-                        <h1 className='title'>2048</h1>
-                        <Board matrix={matrix}/>
-                    </div>
-                </div>
-                <GameoverBlock gameover={gameover} reset={onReset}/>
-            </div>
-           
-            
-        );
-    }
+    render
 }

@@ -1,12 +1,16 @@
 import {connect} from 'react-redux';
+import { initMatrix } from '../../reducers/board';
 import App from './App';
 
 const mapStateToProps = state =>{
-    console.log(state.board.matrix);
     return {
         matrix: state.board.matrix
     }
-    
 }
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = {
+    onInit: initMatrix
+};
+  
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);

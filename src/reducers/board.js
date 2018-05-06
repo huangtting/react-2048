@@ -5,7 +5,7 @@ const MOVE_UP = 'MOVE_UP';
 const MOVE_DOWN = 'MOVE_DOWN';
 const MOVE_LEFT = 'MOVE_LEFT';
 const MOVE_RIGHT = 'MOVE_RIGHT';
-// const RESET = 'RESET';
+const RESET = 'RESET';
 
 const initState={
     matrix:[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
@@ -22,21 +22,23 @@ class Matrix{
         const {matrix} = this;
         const coordinates = [];
 
-        for(let row of matrix)
-        {
-            for(let col of row)
-            {
-                if(row[col]===0) coordinates.push([row,col]);
+        for (let row = 0; row < matrix.length; row++) {
+            for (let col = 0; col < matrix[row].length; col++) {
+              const val = matrix[row][col];
+              if (val === 0) {
+                coordinates.push([row, col]);
+              }
             }
-        }
+          }
         return coordinates;
     }
-// Math.random返回 [0,1)的随机数
+// Math.random返回 [0,1)的随机数,getRandom返回arr数组中的一个随机数
     getRandom= (arr) => {
-        return arr[Math.round(Math.random()*arr.length-1)];
+        let index=Math.round(Math.random()*(arr.length-1));
+        return arr[index];
     }
     isBoardMoved = (preMatrix,newMatrix) =>{
-        return preMatrix!==newMatrix;
+        return JSON.stringify(preMatrix)!==JSON.stringify(newMatrix);
     }
 
     addRandomNum = ()=>{
@@ -47,6 +49,7 @@ class Matrix{
 
         const emptyCoordinates=this.getEmptyCoordinates();
         if(emptyCoordinates.length===0) {
+            // console.log(newMatrix);
             if(this.checkGameOver(newMatrix)){
                 this.gameOver=true;
                 return {gameOver:true}
@@ -54,15 +57,17 @@ class Matrix{
             return {matrix}
         }
 
-        const cor= this.getRandom(emptyCoordinates);
+        let cor= this.getRandom(emptyCoordinates);
+        // console.log(cor);
         newMatrix[cor[0]][cor[1]] = this.getRandom([2,4]);
+        // console.log(newMatrix);
         if (this.checkGameOver(newMatrix)) {
             this.gameOver = true;
             // 为什么需要返回newMatrix?
             return { gameOver: true, matrix: newMatrix };
         }
 
-        this.marix =newMatrix;
+        this.matrix =newMatrix;
 // 不能直接修改state，而是返回一个新的对象
         return {matrix : newMatrix}
     }
@@ -80,6 +85,7 @@ class Matrix{
             }
             newMatrix.push(newRow);
         }
+        
         this.matrix= newMatrix;
         return newMatrix;
     }
@@ -179,10 +185,10 @@ class Matrix{
 
 
     checkGameOver=matrix=>{
-        const copy=matrix;
+        const copy=JSON.parse(JSON.stringify(matrix));
         const check = func =>{
-            this.matrix=copy;
-            const isMoved=this.isBoardMoved(copy,func().matrix);
+            this.matrix=copy;     
+            let isMoved=this.isBoardMoved(copy,func().matrix);
             this.matrix=copy;
             return isMoved;
         }
@@ -200,8 +206,8 @@ class Matrix{
         this.rotateRight();
         this.shiftRight();
         this.combineNumToRight();
-        // Rotate board back upright
         this.rotateLeft();
+        return {matrix:this.matrix};
     }
 
     moveDown = ()=>{
@@ -209,16 +215,19 @@ class Matrix{
         this.shiftLeft();
         this.combineNumToLeft();
         this.rotateLeft();
+        return {matrix:this.matrix};
     }
 
     moveLeft = ()=>{
         this.shiftLeft();
         this.combineNumToLeft();
+        return {matrix:this.matrix};
     }
 
     moveRight = ()=>{
         this.shiftRight();
         this.combineNumToRight();
+        return {matrix:this.matrix};
     }
 }
 
@@ -226,12 +235,12 @@ export default function (state=initState,action){
     let mat= new Matrix(state);
     switch (action.type) {
         case INIT: {
-        //   if (action.board) {
-        //     return { ...state, ...action.board };
-        //   }
+          if (action.board) {
+            return { ...state, ...action.board };
+          }
           mat.addRandomNum();
           const result = mat.addRandomNum();
-    //   在state的基础上覆盖掉原来的matrix
+    //  覆盖掉原来的matrix
           return { ...state, ...result };
         }
         case PLACE_RANDOM: {
@@ -254,10 +263,31 @@ export default function (state=initState,action){
           const result = mat.moveRight();
           return { ...state, ...result };
         }
+        case RESET:{
+            const copy = JSON.parse(JSON.stringify(initState));
+            mat = new Matrix(copy);
+            mat.addRandomNum();
+            const result = mat.addRandomNum();
+            return { ...copy, ...result };
+        }
         default: {
           return state;
         }
     }
-
-
 }
+// Action creators
+export const initMatrix = board =>({
+    type:INIT,
+    board
+})
+
+const actionCreator = type =>()=>({
+    type
+});
+
+export const placeRandom = actionCreator(PLACE_RANDOM);
+export const moveUp = actionCreator(MOVE_UP);
+export const moveDown = actionCreator(MOVE_DOWN);
+export const moveLeft = actionCreator(MOVE_LEFT);
+export const moveRight = actionCreator(MOVE_RIGHT);
+export const reset = actionCreator(RESET);

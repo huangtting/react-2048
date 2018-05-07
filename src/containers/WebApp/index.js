@@ -12,7 +12,9 @@ import {
 // 从state中得到matrix
 const mapStateToProps = state =>({
     matrix: state.board.matrix,
-    gameover:state.board.gameOver
+    gameover:state.board.gameOver,
+    bestScore: state.board.bestScore,
+    score: state.board.score
 })
 
 const mapDispatchToProps = {

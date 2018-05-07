@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'underscore';
 import Board from '../../components/Board';
-// import WrapperButton from '../../components/WrapperButton';
+import WrapperButton from '../../components/WrapperButton';
 import GameoverBlock from '../../components/GameoverBlock';
+import Scores from '../../components/Scores';
+import styles from './WebApp.scss';
+import resetSvg from '../../assets/svg/reset.svg';
 
 const keyUp = 38;
 const keyRight = 39;
@@ -24,10 +27,18 @@ export default class WebApp extends React.Component{
         onMoveLeft: PropTypes.func.isRequired,
         onMoveRight: PropTypes.func.isRequired,
         onPlaceRandom: PropTypes.func.isRequired,
+        score: PropTypes.number,
+        bestScore: PropTypes.number,
         gameover: PropTypes.bool,
         onReset :PropTypes.func.isRequired
     }
 
+    static defaultProps ={
+        score: 0,
+        bestScore: 0,
+        gameOver: false,
+        onReset() {}
+    }
     constructor(...args){
         super(...args);
         this.keyUpHandler=this.handleKeyUp;
@@ -113,7 +124,7 @@ export default class WebApp extends React.Component{
     };
 
     render(){
-        const {matrix,gameover,onReset}=this.props;
+        const {matrix,gameover,onReset,bestScore,score}=this.props;
 
         return (
             <div className='app'>
@@ -121,6 +132,15 @@ export default class WebApp extends React.Component{
                     <div className='board'>
                         <h1 className='title'>2048</h1>
                         <Board matrix={matrix}/>
+                    </div>
+                    <div className='panel'>
+                        <div>
+                            <Scores bestScore={bestScore} score={score} />
+                            <WrapperButton onClick={onReset}>
+                                <img src={resetSvg} alt="reset" />
+                            </WrapperButton>
+                        </div>
+                       
                     </div>
                 </div>
                 <GameoverBlock gameover={gameover} reset={onReset}/>

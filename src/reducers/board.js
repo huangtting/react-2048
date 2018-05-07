@@ -9,14 +9,21 @@ const RESET = 'RESET';
 
 const initState={
     matrix:[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-    gameOver:false
+    gameOver:false,
+    score: 0,
+    bestScore: 0,
+    gameOver: false,
+   
 }
 
 class Matrix{
-    constructor({matrix,gameOver}){
+    constructor({matrix,gameOver,score,bestScore}){
         // this.matrix = matrix;
         this.matrix=JSON.parse(JSON.stringify(matrix));
         this.gameOver=gameOver;
+        this.score=score;
+        this.bestScore=bestScore;
+        
     }
     getEmptyCoordinates = ()=>{
         const {matrix} = this;
@@ -49,7 +56,6 @@ class Matrix{
 
         const emptyCoordinates=this.getEmptyCoordinates();
         if(emptyCoordinates.length===0) {
-            // console.log(newMatrix);
             if(this.checkGameOver(newMatrix)){
                 this.gameOver=true;
                 return {gameOver:true}
@@ -58,17 +64,16 @@ class Matrix{
         }
 
         let cor= this.getRandom(emptyCoordinates);
-        // console.log(cor);
+       
         newMatrix[cor[0]][cor[1]] = this.getRandom([2,4]);
-        // console.log(newMatrix);
+       
         if (this.checkGameOver(newMatrix)) {
             this.gameOver = true;
-            // 为什么需要返回newMatrix?
             return { gameOver: true, matrix: newMatrix };
         }
 
         this.matrix =newMatrix;
-// 不能直接修改state，而是返回一个新的对象
+        // 不能直接修改state，而是返回一个新的对象
         return {matrix : newMatrix}
     }
 
@@ -152,7 +157,7 @@ class Matrix{
             if (matrix[row][col] > 0 && matrix[row][col] === matrix[row][col + 1]) {
               matrix[row][col] *= 2;
               matrix[row][col + 1] = 0;
-            //   this.score += matrix[row][col];
+              this.score += matrix[row][col];
             } 
           }
         }
@@ -171,7 +176,7 @@ class Matrix{
             if (matrix[row][col] > 0 && matrix[row][col] === matrix[row][col - 1]) {
               matrix[row][col] *= 2;
               matrix[row][col - 1] = 0;
-            //   this.score += matrix[row][col];
+              this.score += matrix[row][col];
             } 
           }
         }
@@ -201,33 +206,52 @@ class Matrix{
         return !moves.includes(true);
     }
 
+    move= func =>{
+        const prevMatrix = JSON.parse(JSON.stringify(this.matrix));
+        func();
+        // console.log(prevMatrix,this.matrix);
+        const { matrix, score, bestScore } = this;
+        
+        const rsp = {
+          matrix,
+          score,
+          bestScore: score > bestScore ? score : bestScore,
+         
+        };
+        // console.log(rsp);
+        return rsp;
+    }
 
     moveUp=()=>{
-        this.rotateRight();
-        this.shiftRight();
-        this.combineNumToRight();
-        this.rotateLeft();
-        return {matrix:this.matrix};
+        return this.move(()=>{
+            this.rotateRight();
+            this.shiftRight();
+            this.combineNumToRight();
+            this.rotateLeft();
+        })
     }
 
     moveDown = ()=>{
-        this.rotateRight();
-        this.shiftLeft();
-        this.combineNumToLeft();
-        this.rotateLeft();
-        return {matrix:this.matrix};
+        return this.move(()=>{
+            this.rotateRight();
+            this.shiftLeft();
+            this.combineNumToLeft();
+            this.rotateLeft();
+        })
     }
 
     moveLeft = ()=>{
-        this.shiftLeft();
-        this.combineNumToLeft();
-        return {matrix:this.matrix};
+        return this.move(()=>{
+            this.shiftLeft();
+            this.combineNumToLeft();
+        })
     }
 
     moveRight = ()=>{
-        this.shiftRight();
-        this.combineNumToRight();
-        return {matrix:this.matrix};
+        return this.move(()=>{
+            this.shiftRight();
+            this.combineNumToRight();
+        })
     }
 }
 
@@ -253,6 +277,7 @@ export default function (state=initState,action){
         }
         case MOVE_DOWN: {
           const result = mat.moveDown();
+        //   console.log(result);
           return { ...state, ...result };
         }
         case MOVE_LEFT: {
@@ -268,7 +293,7 @@ export default function (state=initState,action){
             mat = new Matrix(copy);
             mat.addRandomNum();
             const result = mat.addRandomNum();
-            return { ...copy, ...result };
+            return { ...copy, ...result,bestScore: state.bestScore };
         }
         default: {
           return state;

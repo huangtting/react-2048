@@ -1,0 +1,26 @@
+.mobile-app {
+  padding: 8vw 4vw 0;
+  text-align: center;
+
+  .head {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .title {
+      font-size: 3rem;
+      // margin-top: -2.5vw;
+      text-align: left;
+    }
+  }
+
+  .btn{
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px;
+  }
+
+  .board {
+    display: flex;
+    justify-content: center;
+  }
+}

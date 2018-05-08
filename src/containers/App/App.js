@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import WebApp from '../WebApp';
+import MobileApp from '../MobileApp';
 // Web和移动端的展示组件
 export default class App extends React.Component{
     static propTypes = {
@@ -38,11 +39,12 @@ export default class App extends React.Component{
     }
 
     render(){
+        const {isMobile} = this.state;
         return (
             <div>
-                <WebApp/>
-              
-                
+                {
+                    isMobile?(<MobileApp/>):(<WebApp/>)
+                }   
             </div>
             
         )

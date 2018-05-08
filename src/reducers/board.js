@@ -12,18 +12,17 @@ const initState={
     gameOver:false,
     score: 0,
     bestScore: 0,
-    gameOver: false,
-   
+    isMoved:true
 }
 
 class Matrix{
-    constructor({matrix,gameOver,score,bestScore}){
+    constructor({matrix,gameOver,score,bestScore,isMoved}){
         // this.matrix = matrix;
         this.matrix=JSON.parse(JSON.stringify(matrix));
         this.gameOver=gameOver;
         this.score=score;
         this.bestScore=bestScore;
-        
+        this.isMoved=isMoved;
     }
     getEmptyCoordinates = ()=>{
         const {matrix} = this;
@@ -49,32 +48,35 @@ class Matrix{
     }
 
     addRandomNum = ()=>{
-        const {matrix} =this;
-        const newMatrix = JSON.parse(JSON.stringify(matrix));
-
-        if(this.gameOver) return { matrix };
-
-        const emptyCoordinates=this.getEmptyCoordinates();
-        if(emptyCoordinates.length===0) {
-            if(this.checkGameOver(newMatrix)){
-                this.gameOver=true;
-                return {gameOver:true}
+        if(this.isMoved){
+            const {matrix} =this;
+            const newMatrix = JSON.parse(JSON.stringify(matrix));
+    
+            if(this.gameOver) return { matrix };
+    
+            const emptyCoordinates=this.getEmptyCoordinates();
+            if(emptyCoordinates.length===0) {
+                if(this.checkGameOver(newMatrix)){
+                    this.gameOver=true;
+                    return {gameOver:true}
+                }
+                return {matrix}
             }
-            return {matrix}
+    
+            let cor= this.getRandom(emptyCoordinates);
+           
+            newMatrix[cor[0]][cor[1]] = this.getRandom([2,4]);
+           
+            if (this.checkGameOver(newMatrix)) {
+                this.gameOver = true;
+                return { gameOver: true, matrix: newMatrix };
+            }
+    
+            this.matrix =newMatrix;
+            // 不能直接修改state，而是返回一个新的对象
+            return {matrix : newMatrix}
         }
-
-        let cor= this.getRandom(emptyCoordinates);
-       
-        newMatrix[cor[0]][cor[1]] = this.getRandom([2,4]);
-       
-        if (this.checkGameOver(newMatrix)) {
-            this.gameOver = true;
-            return { gameOver: true, matrix: newMatrix };
-        }
-
-        this.matrix =newMatrix;
-        // 不能直接修改state，而是返回一个新的对象
-        return {matrix : newMatrix}
+        
     }
 
     rotateRight = ()=>{
@@ -209,14 +211,15 @@ class Matrix{
     move= func =>{
         const prevMatrix = JSON.parse(JSON.stringify(this.matrix));
         func();
-        // console.log(prevMatrix,this.matrix);
+        const isMoved=this.isBoardMoved(prevMatrix,this.matrix);
+        this.isMoved=isMoved;
         const { matrix, score, bestScore } = this;
         
         const rsp = {
           matrix,
           score,
           bestScore: score > bestScore ? score : bestScore,
-         
+          isMoved
         };
         // console.log(rsp);
         return rsp;

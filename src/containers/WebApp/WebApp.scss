@@ -38,7 +38,7 @@
 
   .btn {
     margin-right: 0.77vw;
-    margin-top: 0.77vw;
+    margin-top: 4vw;
   }
 
   img {
@@ -46,21 +46,5 @@
     width: 2.1vw;
   }
 
-  .arrows {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .left {
-    transform: rotate(270deg);
-  }
-
-  .right {
-    transform: rotate(90deg);
-  }
-
-  .down {
-    transform: rotate(180deg);
-  }
 }
 

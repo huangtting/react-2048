@@ -136,7 +136,7 @@ export default class WebApp extends React.Component{
                     <div className='panel'>
                         <div>
                             <Scores bestScore={bestScore} score={score} />
-                            <WrapperButton onClick={onReset}>
+                            <WrapperButton onClick={onReset} >
                                 <img src={resetSvg} alt="reset" />
                             </WrapperButton>
                         </div>

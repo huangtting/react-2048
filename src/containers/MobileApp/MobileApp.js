@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import debounce from 'underscore';
 import Board from '../../components/Board';
 import WrapperButton from '../../components/WrapperButton';
 import GameoverBlock from '../../components/GameoverBlock';

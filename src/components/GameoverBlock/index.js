@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+// eslint-disable-next-line
 import styles from './gameoverBlock.scss';
 import resetSvg from '../../assets/svg/reset.svg'
 

@@ -26,54 +26,54 @@ $mobile-len: 20vw;
   font-size: 2rem;
 }
 
-.color-2 {
-  background-color: $blue;
-}
-
-.color-4 {
+.color-2 { 
   background-color: $green;
 }
 
-.color-8 {
-  background-color: $purple;
+.color-4 {
+  background-color: $blue;
 }
 
-.color-16 {
+.color-8 {
   background-color: $red;
 }
 
-.color-32 {
+.color-16 {
   background-color: $pink;
 }
 
-.color-64 {
-  background-color: $lime;
+.color-32 {
+  background-color: $amber;
 }
 
-.color-128 {
+.color-64 {
   background-color: $indigo;
 }
 
+.color-128 {
+  background-color:  $deep-orange ;
+}
+
 .color-256 {
-  background-color: $orange;
+  background-color:$deep-purple;
 }
 
 .color-512 {
-  background-color: $deep-purple;
-}
-
-.color-1024 {
   background-color: $teal;
 }
 
+.color-1024 {
+  background-color: $brown;
+}
+
 .color-2048 {
-  background-color: $light-blue;
+  background-color: $cyan;
 }
 
 .color-4096 {
-  background-color: $yellow;
+  background-color:  $light-black;
 }
 
 .color-8192 {
-  background-color: $cyan;
+  background-color: $black;
 }

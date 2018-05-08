@@ -2,8 +2,15 @@ import { createStore} from 'redux';
 import rootReducer from './reducers';
 
 const initHistory = JSON.parse(localStorage.getItem('state')||null);
-
-const store = createStore(rootReducer,initHistory);
+let store;
+if(initHistory)
+{
+    store= createStore(rootReducer,initHistory);
+}
+else{
+    store = createStore(rootReducer);
+}
+ 
 
 // store每次改变就将state存到localStorage中
 store.subscribe(()=>{

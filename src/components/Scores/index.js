@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// eslint-disable-next-line
 import styles from './scores.scss';
 
 export default function Scores({ score, bestScore }) {

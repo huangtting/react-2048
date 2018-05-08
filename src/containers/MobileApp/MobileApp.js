@@ -5,6 +5,7 @@ import Board from '../../components/Board';
 import WrapperButton from '../../components/WrapperButton';
 import GameoverBlock from '../../components/GameoverBlock';
 import Scores from '../../components/Scores';
+// eslint-disable-next-line
 import styles from './MobileApp.scss';
 import resetSvg from '../../assets/svg/reset.svg';
 import swipeDetect from '../../utils/mobileEvent';

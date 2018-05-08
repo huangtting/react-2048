@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import debounce from 'underscore';
 import Board from '../../components/Board';
 import WrapperButton from '../../components/WrapperButton';
 import GameoverBlock from '../../components/GameoverBlock';
 import Scores from '../../components/Scores';
+// eslint-disable-next-line
 import styles from './WebApp.scss';
 import resetSvg from '../../assets/svg/reset.svg';
 
@@ -139,6 +139,7 @@ export default class WebApp extends React.Component{
                             <WrapperButton onClick={onReset} >
                                 <img src={resetSvg} alt="reset" />
                             </WrapperButton>
+                           
                         </div>
                        
                     </div>
